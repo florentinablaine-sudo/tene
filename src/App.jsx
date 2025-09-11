@@ -1045,31 +1045,43 @@ export default function App() {
       
         const tg = window.Telegram?.WebApp;
         if (method === 'boosty') {
-        const botUsername = "tenebrisverbot"; // <-- ВАЖНО: Укажите здесь имя пользователя вашего бота
-        const firebase_uid = auth.currentUser.uid;
+    if (!auth.currentUser) return; // Защита на случай, если пользователь не авторизован
 
-        // Формируем правильную deep-link ссылку с командой /link
+    const firebase_uid = auth.currentUser.uid;
+    const botUsername = "tenebrisverbot"; // Имя вашего бота
+
+    try {
+        // ШАГ 1: Создаем "заявку" в базе данных
+        const userDocRef = doc(db, "users", firebase_uid);
+        await setDoc(userDocRef, {
+            pendingSubscription: {
+                name: selectedPlan.name, // Используем имя выбранного тарифа
+                price: selectedPlan.price,
+                method: 'boosty', // Указываем, что это Boosty
+                duration: selectedPlan.duration,
+            }
+        }, { merge: true });
+
+        // ШАГ 2: Отправляем пользователя к боту, как и раньше
         const link = `https://t.me/${botUsername}?start=${firebase_uid}`;
-
         const tg = window.Telegram?.WebApp;
         if (tg) {
             tg.openTelegramLink(link);
-            tg.showPopup({
-                title: 'Инструкция по оплате',
-                message: 'Вы будете перенаправлены в чат с ботом. Нажмите "Начать", чтобы получить инструкцию по привязке Boosty.',
-                buttons: [{ type: 'ok', text: 'Понятно' }]
-            });
         } else {
-            // Фоллбэк для случаев, когда WebApp недоступен
             window.open(link, '_blank');
         }
 
-        // Закрываем все модальные окна
+        // Закрываем модальные окна
         setIsPaymentModalOpen(false);
         setSelectedPlan(null);
         setIsSubModalOpen(false);
-        return;
+
+    } catch (error) {
+        console.error("Ошибка при создании заявки на оплату Boosty:", error);
+        // Здесь можно показать пользователю сообщение об ошибке
     }
+    return;
+}
 
         if (!tg || !userId || !selectedPlan) {
             console.error("Telegram Web App, userId, or selectedPlan is not available.");
