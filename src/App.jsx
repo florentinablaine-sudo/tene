@@ -40,13 +40,60 @@ const SubscriptionModal = ({ onClose, onSelectPlan }) => {
     return (<div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"><div className="w-full max-w-sm rounded-2xl p-6 shadow-lg bg-component-bg text-text-main"><CrownIcon className="mx-auto mb-4 text-accent" /><h3 className="text-xl text-center font-bold">Получите доступ ко всем главам</h3><p className="mt-2 mb-6 text-sm text-center opacity-70">Выберите подходящий тариф подписки:</p><div className="space-y-3">{subscriptionPlans.map(plan => (<button key={plan.duration} onClick={() => onSelectPlan(plan)} className="relative w-full text-left p-4 rounded-xl border-2 transition-colors duration-200 border-border-color bg-background hover:border-accent-hover"><p className="font-bold">{plan.name}</p><p className="text-sm">{plan.price} ₽</p></button>))}</div><button onClick={onClose} className="w-full py-3 mt-4 rounded-lg border border-border-color">Не сейчас</button></div></div>);
 };
 const PaymentMethodModal = ({ onClose, onSelectMethod, plan }) => {
-    return (<div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"><div className="w-full max-w-sm rounded-2xl p-6 shadow-lg bg-component-bg text-text-main"><h3 className="text-xl text-center font-bold">Выберите способ оплаты</h3><p className="mt-2 mb-6 text-sm text-center opacity-70">Тариф: {plan.name} ({plan.price} ₽)</p><div className="space-y-3"><button onClick={() => onSelectMethod('card')} className="w-full text-left p-4 rounded-xl border-2 transition-colors duration-200 border-border-color bg-background hover:border-accent-hover"><p className="font-bold">💳 Банковской картой</p><p className="text-sm opacity-70">Ручная проверка (до 24 часов)</p></button><button onClick={() => onSelectMethod('tribut')} className="w-full text-left p-4 rounded-xl border-2 transition-colors duration-200 border-border-color bg-background hover:border-accent-hover"><p className="font-bold">❤️ Донат через tribut</p><p className="text-sm opacity-70">Более быстрый способ</p></button><button
-        onClick={() => onSelectMethod('boosty')}
-        className="w-full text-left p-4 rounded-xl border-2 transition-colors duration-200 border-border-color bg-background hover:border-accent-hover"
-    >
-        <p className="font-bold">🧡 Оплатить через Boosty</p>
-        <p className="text-sm opacity-70">Автоматическая активация через Telegram</p>
-    </button></div><button onClick={onClose} className="w-full py-3 mt-4 rounded-lg border border-border-color">Назад</button></div></div>)
+    return (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="w-full max-w-sm rounded-2xl p-6 shadow-lg bg-component-bg text-text-main">
+                <h3 className="text-xl text-center font-bold">Выберите способ оплаты</h3>
+                <p className="mt-2 mb-6 text-sm text-center opacity-70">Тариф: {plan.name} ({plan.price} ₽)</p>
+                <div className="space-y-3">
+                    {/* Кнопка "Банковской картой" */}
+                    <button 
+                        onClick={() => onSelectMethod('card')} 
+                        className="w-full text-left p-4 rounded-xl border-2 transition-colors duration-200 border-border-color bg-background hover:border-accent-hover"
+                    >
+                        <p className="font-bold">💳 Банковской картой</p>
+                        <p className="text-sm opacity-70">Ручная проверка (до 24 часов)</p>
+                    </button>
+                    
+                    {/* Кнопка "Донат через tribut" */}
+                    <button 
+                        onClick={() => onSelectMethod('tribut')} 
+                        className="w-full text-left p-4 rounded-xl border-2 transition-colors duration-200 border-border-color bg-background hover:border-accent-hover"
+                    >
+                        <p className="font-bold">❤️ Донат через tribut</p>
+                        <p className="text-sm opacity-70">Более быстрый способ</p>
+                    </button>
+                    
+                    {/* Кнопка "Оплатить через Boosty" (ИСПРАВЛЕНА) */}
+                    <button
+                        onClick={() => onSelectMethod('boosty')}
+                        className="w-full text-left p-4 rounded-xl border-2 transition-colors duration-200 border-border-color bg-background hover:border-accent-hover"
+                    >
+                        <p className="font-bold">🧡 Оплатить через Boosty</p>
+                        <p className="text-sm opacity-70">Автоматическая активация через Telegram</p>
+                    </button>
+
+                    {/* Кнопка/ссылка "Уже есть подписка?" */}
+                    <div className="text-center pt-2"> {/* Добавлен небольшой отступ сверху */}
+                        <button
+                            onClick={() => onSelectMethod('boosty')} 
+                            className="text-sm text-accent hover:underline"
+                        >
+                            Уже есть подписка? Синхронизировать аккаунт
+                        </button>
+                    </div>
+                </div>
+                
+                {/* Кнопка "Назад" */}
+                <button 
+                    onClick={onClose} 
+                    className="w-full py-3 mt-6 rounded-lg border border-border-color hover:bg-white/5 transition-colors"
+                >
+                    Назад
+                </button>
+            </div>
+        </div>
+    );
 };
 
 const Header = ({ title, onBack }) => (
