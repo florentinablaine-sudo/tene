@@ -1045,16 +1045,27 @@ export default function App() {
       
         const tg = window.Telegram?.WebApp;
         if (method === 'boosty') {
+        const botUsername = "TenebrisVerbumBot"; // <-- ВАЖНО: Укажите здесь имя пользователя вашего бота
+        const firebase_uid = auth.currentUser.uid;
+
+        // Формируем правильную deep-link ссылку с командой /link
+        const link = `https://t.me/${botUsername}?start=${firebase_uid}`;
+
+        const tg = window.Telegram?.WebApp;
         if (tg) {
-            // Замените YOUR_BOOSTY_URL на вашу реальную ссылку
-            tg.openLink('https://boosty.to/florentina'); 
+            tg.openTelegramLink(link);
             tg.showPopup({
-                title: 'Инструкция после оплаты',
-                message: 'После успешной подписки на Boosty, вступите в нашу приватную Telegram-группу (ссылку вы получите от Boosty) и отправьте нашему боту команду /link ВАШ_ID, чтобы активировать подписку.',
+                title: 'Инструкция по оплате',
+                message: 'Вы будете перенаправлены в чат с ботом. Нажмите "Начать", чтобы получить инструкцию по привязке Boosty.',
                 buttons: [{ type: 'ok', text: 'Понятно' }]
             });
+        } else {
+            // Фоллбэк для случаев, когда WebApp недоступен
+            window.open(link, '_blank');
         }
+
         // Закрываем все модальные окна
+        setIsPaymentModalOpen(false);
         setSelectedPlan(null);
         setIsSubModalOpen(false);
         return;
