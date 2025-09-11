@@ -1045,7 +1045,7 @@ export default function App() {
       
         const tg = window.Telegram?.WebApp;
         if (method === 'boosty') {
-        const botUsername = "TenebrisVerbumBot"; // <-- ВАЖНО: Укажите здесь имя пользователя вашего бота
+        const botUsername = "tenebrisverbot"; // <-- ВАЖНО: Укажите здесь имя пользователя вашего бота
         const firebase_uid = auth.currentUser.uid;
 
         // Формируем правильную deep-link ссылку с командой /link
