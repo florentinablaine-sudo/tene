@@ -773,6 +773,18 @@ const ProfilePage = ({ user, subscription, onGetSubscriptionClick, userId, auth 
                     </button>
                 </div>
             </div>
+          <div className="p-4 rounded-lg bg-component-bg border border-border-color mx-4 mb-4">
+                <h3 className="font-bold mb-2">Настройки</h3>
+                <div className="flex items-center justify-between">
+                    <span>Тёмная тема</span>
+                    <button 
+                        onClick={onThemeToggle}
+                        className="w-14 h-7 rounded-full bg-background flex items-center transition-colors p-1"
+                    >
+                        <div className={`w-5 h-5 rounded-full bg-accent shadow-md transform transition-transform ${currentTheme === 'dark' ? 'translate-x-7' : ''}`} />
+                    </button>
+                </div>
+            </div>
             <div className="p-4 rounded-lg bg-component-bg border border-border-color mx-4 mb-4">
                  <h3 className="font-bold mb-2">Подписка</h3>
                  {hasActiveSubscription ? (
@@ -884,6 +896,7 @@ const NewsModal = ({ newsItem, onClose }) => (
 
 
 export default function App() {
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light'); // Сохраняем тему
   const [fontSize, setFontSize] = useState(16);
   const [fontClass, setFontClass] = useState('font-sans');
   const [page, setPage] = useState('list');
@@ -960,6 +973,20 @@ export default function App() {
         setIsLoading(false);
       }
     });
+
+    useEffect(() => {
+    const root = window.document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme); // Запоминаем выбор пользователя
+  }, [theme]);
+  
+  const handleThemeToggle = () => {
+    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+  };
 
     getRedirectResult(auth).catch((error) => {
       console.error("Ошибка при обработке входа через Telegram:", error);
@@ -1217,7 +1244,7 @@ export default function App() {
       case 'bookmarks':
         return <BookmarksPage novels={bookmarkedNovels} onSelectNovel={handleSelectNovel} bookmarks={bookmarks} onToggleBookmark={handleToggleBookmark} />
       case 'profile':
-        return <ProfilePage user={user} subscription={subscription} onGetSubscriptionClick={handleGetSubscription} userId={userId} auth={auth} />
+        return <ProfilePage user={user} subscription={subscription} onGetSubscriptionClick={handleGetSubscription} userId={userId} auth={auth} onThemeToggle={handleThemeToggle} currentTheme={theme}/>
       default:
         return <Header title="Библиотека" />
     }

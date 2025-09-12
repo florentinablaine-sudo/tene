@@ -4,15 +4,18 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class', // Эта строка на месте, всё отлично!
   theme: {
     extend: {
       colors: {
-        'background': '#F5F1ED',
-        'text-main': '#2C3A47',
-        'component-bg': '#FFFFFF',
-        'accent': '#9A7B66',
-        'accent-hover': '#8A6B56',
-        'border-color': '#EAE5E0',
+        // Вот так должно быть: только переменные!
+        // Теперь Tailwind будет брать цвета из CSS-файла.
+        'background': 'var(--background)',
+        'text-main': 'var(--text-main)',
+        'component-bg': 'var(--component-bg)',
+        'accent': 'var(--accent)',
+        'accent-hover': 'var(--accent-hover)',
+        'border-color': 'var(--border-color)',
       },
       fontFamily: {
         'sans': ['JetBrains Mono', 'monospace'],
@@ -22,14 +25,8 @@ export default {
       },
       keyframes: {
         'pulse-heart': {
-          '0%, 100%': {
-            transform: 'scale(1)',
-            opacity: '1',
-          },
-          '50%': {
-            transform: 'scale(1.2)',
-            opacity: '0.7',
-          },
+          '0%, 100%': { transform: 'scale(1)', opacity: '1', },
+          '50%': { transform: 'scale(1.2)', opacity: '0.7', },
         },
       },
       animation: {
