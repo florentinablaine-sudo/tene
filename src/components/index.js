@@ -6,4 +6,5 @@ export * from './LoadingSpinner.jsx';
 export * from './SubscriptionModal.jsx';
 export * from './PaymentMethodModal.jsx';
 export * from './BottomNav.jsx';
-export * from './News.jsx';
+export * from './NewsSlider.jsx';
+export * from './NewsModal.jsx';

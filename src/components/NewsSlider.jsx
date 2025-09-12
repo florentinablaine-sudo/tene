@@ -1,3 +1,6 @@
+import React, { useState, useEffect } from 'react';
+import { ChevronLeftIcon, ChevronRightIcon } from '.';
+
 export const NewsSlider = ({ onReadMore }) => {
     const [news, setNews] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);

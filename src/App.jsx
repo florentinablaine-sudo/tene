@@ -1,4 +1,5 @@
 // Импорты React и Firebase
+
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { doc, getDoc, setDoc, onSnapshot } from "firebase/firestore";
 import { onAuthStateChanged, getRedirectResult } from "firebase/auth";
@@ -13,7 +14,7 @@ import { Header } from './components/Header.jsx';
 import { NovelList } from './components/NovelList.jsx';
 import { BottomNav } from './components/BottomNav.jsx';
 import { NewsSlider } from './components/NewsSlider.jsx';
-import { NewsModal } from './components/News.jsx'
+import { NewsModal } from './components/NewsModal.jsx';
 
 // СТРАНИЦЫ
 import { NovelDetails } from './components/pages/NovelDetails.jsx';
