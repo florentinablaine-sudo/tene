@@ -1,14 +1,11 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { doc, getDoc, setDoc, updateDoc, deleteDoc, collection, onSnapshot, query, orderBy, addDoc, serverTimestamp, runTransaction } from "firebase/firestore";
-import { db } from "../../firebase-config";
-import { HeartIcon } from '../icons.jsx';
-import { BackIcon } from '../icons.jsx';
-import { ArrowRightIcon } from '../icons.jsx';
-import { SettingsIcon } from '../icons.jsx';
+import { db } from "../../firebase-config.js";
+import { HeartIcon, BackIcon, ArrowRightIcon, SettingsIcon, SendIcon } from '../icons.jsx';
 import { SubscriptionModal } from '../SubscriptionModal.jsx';
 import { PaymentMethodModal } from '../PaymentMethodModal.jsx';
-import { Comment } from '../Comment.jsx';
-import { groupComments } from '../Comment.jsx';
+import { Comment, groupComments } from '../Comment.jsx';
+import { Header } from '../Header.jsx';
 
 export const ChapterReader = ({ chapter, novel, fontSize, onFontSizeChange, userId, userName, currentFontClass, onSelectChapter, allChapters, subscription, botUsername, onBack, isUserAdmin }) => {
 
@@ -103,7 +100,7 @@ export const ChapterReader = ({ chapter, novel, fontSize, onFontSizeChange, user
           }
       };
       fetchContent();
-    }, [novel.id, chapter.id, hasActiveSubscription]);
+    }, [novel.id, chapter.id, chapter.isPaid, hasActiveSubscription]);
 
     const handleCommentSubmit = useCallback(async (e, parentId = null) => {
       e.preventDefault();
@@ -387,3 +384,4 @@ export const ChapterReader = ({ chapter, novel, fontSize, onFontSizeChange, user
       </div>
     );
   };
+

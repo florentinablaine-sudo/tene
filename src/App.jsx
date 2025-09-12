@@ -5,28 +5,23 @@ import { onAuthStateChanged, getRedirectResult } from "firebase/auth";
 import { db, auth } from './firebase-config.js';
 import { AuthScreen } from './AuthScreen.jsx';
 
-// Компоненты из папки /components
-import { 
-    LoadingSpinner, 
-    SubscriptionModal, 
-    PaymentMethodModal,
-    Header,
-    NovelList,
-    BottomNav,
-    NewsSlider,
-    NewsModal
-} from './components';
+// КОМПОНЕНТЫ (Импортированы напрямую)
+import { LoadingSpinner } from './components/LoadingSpinner.jsx';
+import { SubscriptionModal } from './components/SubscriptionModal.jsx';
+import { PaymentMethodModal } from './components/PaymentMethodModal.jsx';
+import { Header } from './components/Header.jsx';
+import { NovelList } from './components/NovelList.jsx';
+import { BottomNav } from './components/BottomNav.jsx';
+import { NewsSlider } from './components/NewsSlider.jsx';
+import { NewsModal } from './components/News.jsx'
 
-// Страницы из папки /pages (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
+// СТРАНИЦЫ
 import { NovelDetails } from './components/pages/NovelDetails.jsx';
 import { ChapterReader } from './components/pages/ChapterReader.jsx';
 import { BookmarksPage } from './components/pages/BookmarksPage.jsx';
 import { ProfilePage } from './components/pages/ProfilePage.jsx';
 import { SearchPage } from './components/pages/SearchPage.jsx';
 
-// =================================================================
-// ШАГ 2: ОСНОВНОЙ КОМПОНЕНТ APP (ТЕПЕРЬ ОН ГОРАЗДО ЧИЩЕ)
-// =================================================================
 
 export default function App() {
   // --- Вся логика и состояния остаются здесь ---
@@ -89,17 +84,20 @@ export default function App() {
 
   useEffect(() => {
     let unsubUserFromFirestore = () => {};
+    let isMounted = true;
     
     const unsubAuth = onAuthStateChanged(auth, async (firebaseUser) => {
       unsubUserFromFirestore();
       
       if (firebaseUser) {
+        if (!isMounted) return;
         setUser(firebaseUser);
         const idTokenResult = await firebaseUser.getIdTokenResult();
         setIsUserAdmin(!!idTokenResult.claims.admin);
         
         const userDocRef = doc(db, "users", firebaseUser.uid);
         unsubUserFromFirestore = onSnapshot(userDocRef, (docSnap) => {
+          if (!isMounted) return;
           if (docSnap.exists()) {
             const data = docSnap.data();
             setSubscription(data.subscription || null);
@@ -114,6 +112,7 @@ export default function App() {
           setIsLoading(false); 
         });
       } else {
+        if (!isMounted) return;
         setUser(null);
         setIsUserAdmin(false);
         setSubscription(null);
@@ -125,15 +124,19 @@ export default function App() {
 
     getRedirectResult(auth).catch((error) => {
       console.error("Ошибка при обработке входа через Telegram:", error);
-      alert("Не удалось войти через Telegram. Попробуйте другой способ.");
     });
 
     fetch(`/data/novels.json`)
       .then(res => res.json())
-      .then(data => setNovels(data.novels))
+      .then(data => {
+          if (isMounted) {
+            setNovels(data.novels)
+          }
+      })
       .catch(err => console.error("Ошибка загрузки новелл:", err));
 
     return () => {
+      isMounted = false;
       unsubAuth();
       unsubUserFromFirestore();
     };
@@ -274,7 +277,6 @@ export default function App() {
               } else {
                   window.open(link, '_blank');
               }
-              // setIsPaymentModalOpen(false); // Эта строка вызывала ошибку, т.к. состояния isPaymentModalOpen нет
               setSelectedPlan(null);
               setIsSubModalOpen(false);
 

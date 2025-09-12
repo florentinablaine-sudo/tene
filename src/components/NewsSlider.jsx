@@ -1,23 +1,35 @@
-import React from 'react';
-import { LibraryIcon, SearchIcon, BookmarkIcon, UserIcon } from './icons.jsx';
+export const NewsSlider = ({ onReadMore }) => {
+    const [news, setNews] = useState([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
 
-export const BottomNav = ({ activeTab, setActiveTab }) => {
-    const navItems = [
-        { id: 'library', label: 'Библиотека', icon: LibraryIcon },
-        { id: 'search', label: 'Поиск', icon: SearchIcon },
-        { id: 'bookmarks', label: 'Закладки', icon: BookmarkIcon },
-        { id: 'profile', label: 'Профиль', icon: UserIcon },
-    ];
+    useEffect(() => {
+    fetch(`/data/news.json`)
+        .then(res => res.json())
+            .then(setNews)
+            .catch(err => console.error("Failed to fetch news", err));
+    }, []);
+
+    const nextNews = () => setCurrentIndex((prev) => (prev + 1) % news.length);
+    const prevNews = () => setCurrentIndex((prev) => (prev - 1 + news.length) % news.length);
+
+    if (news.length === 0) return null;
+
+    const currentNewsItem = news[currentIndex];
+
     return (
-        <div className="fixed bottom-0 left-0 right-0 border-t border-border-color bg-component-bg z-30 shadow-[0_-2px_5px_rgba(0,0,0,0.05)]">
-            <div className="flex justify-around items-center h-16">
-                {navItems.map(item => (
-                    <button key={item.id} onClick={() => setActiveTab(item.id)} className={`flex flex-col items-center justify-center w-full h-full transition-colors duration-200 ${activeTab === item.id ? "text-accent" : "text-text-main opacity-60"}`}>
-                        <item.icon filled={activeTab === item.id} />
-                        <span className="text-xs mt-1">{item.label}</span>
-                    </button>
-                ))}
+        <div className="p-4">
+            <div className="bg-component-bg p-4 rounded-2xl shadow-md border border-border-color flex items-center gap-4">
+                <img src={currentNewsItem.imageUrl} alt="News" className="w-16 h-16 rounded-full object-cover border-2 border-border-color" />
+                <div className="flex-1">
+                    <h3 className="font-bold text-text-main">{currentNewsItem.title}</h3>
+                    <p className="text-sm text-text-main opacity-70">{currentNewsItem.shortDescription}</p>
+                    <button onClick={() => onReadMore(currentNewsItem)} className="text-sm font-bold text-accent mt-1">Читать далее</button>
+                </div>
+                <div className="flex flex-col">
+                     <button onClick={prevNews} className="p-1 rounded-full hover:bg-background"><ChevronLeftIcon className="w-5 h-5" /></button>
+                     <button onClick={nextNews} className="p-1 rounded-full hover:bg-background"><ChevronRightIcon className="w-5 h-5" /></button>
+                </div>
             </div>
         </div>
-    )
-}
+    );
+};
