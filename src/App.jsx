@@ -734,7 +734,7 @@ const BookmarksPage = ({ novels, onSelectNovel, bookmarks, onToggleBookmark }) =
     </div>
 )
 
-const ProfilePage = ({ user, subscription, onGetSubscriptionClick, userId, auth }) => {
+const ProfilePage = ({ user, subscription, onGetSubscriptionClick, userId, auth, onThemeToggle, currentTheme }) => {
     const handleLogout = () => {
         signOut(auth).catch((error) => {
             console.error("Ошибка выхода:", error);
@@ -808,10 +808,10 @@ const ProfilePage = ({ user, subscription, onGetSubscriptionClick, userId, auth 
             </div>
             <div className="p-4 rounded-lg bg-component-bg border border-border-color mx-4">
                  <h3 className="font-bold mb-2">Ваш ID для привязки</h3>
-    <p className="text-sm opacity-70 mb-3">
-        Этот ID нужен для связи вашего аккаунта с Telegram-ботом. 
-        Например, после подписки на Boosty.
-    </p>
+                <p className="text-sm opacity-70 mb-3">
+                    Этот ID нужен для связи вашего аккаунта с Telegram-ботом. 
+                    Например, после подписки на Boosty.
+                </p>
                 <div className="bg-background p-2 rounded-md text-xs break-all mb-3">
                     <code>{userId || "Загрузка..."}</code>
                 </div>
@@ -826,6 +826,7 @@ const ProfilePage = ({ user, subscription, onGetSubscriptionClick, userId, auth 
         </div>
     );
 };
+
 
 const BottomNav = ({ activeTab, setActiveTab }) => {
     const navItems = [
@@ -896,7 +897,7 @@ const NewsModal = ({ newsItem, onClose }) => (
 
 
 export default function App() {
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light'); // Сохраняем тему
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
   const [fontSize, setFontSize] = useState(16);
   const [fontClass, setFontClass] = useState('font-sans');
   const [page, setPage] = useState('list');
@@ -918,6 +919,21 @@ export default function App() {
   const [selectedNews, setSelectedNews] = useState(null);
   const BOT_USERNAME = "tenebrisverbot";
   const userId = user?.uid;
+
+  // ОБНОВЛЕННЫЙ БЛОК ДЛЯ ТЕМЫ
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+  
+  const handleThemeToggle = () => {
+    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+  };
 
   const updateUserDoc = useCallback(async (dataToUpdate) => {
     if (userId) {
@@ -973,20 +989,6 @@ export default function App() {
         setIsLoading(false);
       }
     });
-
-    useEffect(() => {
-    const root = window.document.documentElement;
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-    localStorage.setItem('theme', theme); // Запоминаем выбор пользователя
-  }, [theme]);
-  
-  const handleThemeToggle = () => {
-    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
-  };
 
     getRedirectResult(auth).catch((error) => {
       console.error("Ошибка при обработке входа через Telegram:", error);
