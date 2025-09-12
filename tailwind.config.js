@@ -4,18 +4,17 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: 'class', // Эта строка на месте, всё отлично!
+  darkMode: 'class',
   theme: {
     extend: {
+      // ИЗМЕНЕНИЯ ТУТ
       colors: {
-        // Вот так должно быть: только переменные!
-        // Теперь Tailwind будет брать цвета из CSS-файла.
-        'background': 'var(--background)',
-        'text-main': 'var(--text-main)',
-        'component-bg': 'var(--component-bg)',
-        'accent': 'var(--accent)',
-        'accent-hover': 'var(--accent-hover)',
-        'border-color': 'var(--border-color)',
+        background: 'rgb(var(--background) / <alpha-value>)',
+        'text-main': 'rgb(var(--text-main) / <alpha-value>)',
+        'component-bg': 'rgb(var(--component-bg) / <alpha-value>)',
+        accent: 'rgb(var(--accent) / <alpha-value>)',
+        'accent-hover': 'rgb(var(--accent-hover) / <alpha-value>)',
+        'border-color': 'rgb(var(--border-color) / <alpha-value>)',
       },
       fontFamily: {
         'sans': ['JetBrains Mono', 'monospace'],

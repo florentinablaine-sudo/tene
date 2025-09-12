@@ -21,8 +21,31 @@ font-style: italic;
 font-weight: bold;
 }
 
-/* НОВЫЙ СТИЛЬ: для цитат в комментариях */
-.prose blockquote {
-@apply border-l-4 border-border-color pl-4 ml-1 my-2 text-text-main/70 italic;
+@layer base {
+  :root {
+    /* Конвертируем HEX в RGB */
+    --background: 245 241 237; /* #F5F1ED */
+    --text-main: 44 58 71;    /* #2C3A47 */
+    --component-bg: 255 255 255; /* #FFFFFF */
+    --accent: 154 123 102;   /* #9A7B66 */
+    --accent-hover: 138 107 86; /* #8A6B56 */
+    --border-color: 234 229 224; /* #EAE5E0 */
+  }
+
+  .dark {
+    /* И для тёмной темы тоже */
+    --background: 49 39 39;     /* #312727 */
+    --text-main: 255 255 255;   /* #FFFFFF */
+    --component-bg: 49 39 39;     /* #312727 */
+    --accent: 239 62 44;      /* #EF3E2C */
+    --accent-hover: 217 52 34;   /* #D93422 */
+    --border-color: 74 74 74;      /* #4a4a4a */
+  }
 }
 
+body {
+  /* Эта часть остается без изменений */
+  background-color: rgb(var(--background));
+  color: rgb(var(--text-main));
+  transition: background-color 0.3s, color 0.3s;
+}
