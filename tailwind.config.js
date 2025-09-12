@@ -15,6 +15,8 @@ export default {
         accent: 'rgb(var(--accent) / <alpha-value>)',
         'accent-hover': 'rgb(var(--accent-hover) / <alpha-value>)',
         'border-color': 'rgb(var(--border-color) / <alpha-value>)',
+        'genre-highlight-border': 'rgb(var(--genre-highlight-border) / <alpha-value>)',
+        'genre-highlight-text': 'rgb(var(--genre-highlight-text) / <alpha-value>)',
       },
       fontFamily: {
         'sans': ['JetBrains Mono', 'monospace'],
