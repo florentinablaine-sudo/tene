@@ -1,6 +1,6 @@
 import React from 'react';
-import { Header } from '../components/Header';
-import { NovelList } from '../components/NovelList';
+import { Header } from "../Header.jsx";
+import { NovelList } from "../NovelList.jsx";
 
 export const BookmarksPage = ({ novels, onSelectNovel, bookmarks, onToggleBookmark }) => (
     <div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { HeartIcon, SendIcon } from './components';
+import { HeartIcon, SendIcon } from './';
 
 export const groupComments = (commentsList) => {
     const commentMap = {};

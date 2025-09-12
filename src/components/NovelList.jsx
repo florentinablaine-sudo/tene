@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookmarkIcon } from './icons.jsx';
+import { BookmarkIcon } from './';
 
 export const NovelList = ({ novels, onSelectNovel, bookmarks, onToggleBookmark }) => (
     <div className="grid grid-cols-3 gap-x-3 gap-y-5 sm:grid-cols-4 p-4 text-text-main">

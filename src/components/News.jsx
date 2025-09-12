@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronLeftIcon, ChevronRightIcon } from './icons.jsx';
+import { ChevronLeftIcon, ChevronRightIcon } from './';
 
 export const NewsSlider = ({ onReadMore }) => {
     const [news, setNews] = useState([]);

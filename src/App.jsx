@@ -1,23 +1,28 @@
+// Импорты React и Firebase
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { doc, getDoc, setDoc, onSnapshot } from "firebase/firestore";
 import { onAuthStateChanged, getRedirectResult } from "firebase/auth";
-import { db, auth } from './firebase-config';
+import { db, auth } from './firebase-config.js';
 import { AuthScreen } from './AuthScreen.jsx';
 
-// ШАГ 1: ИМПОРТИРУЕМ ВСЕ НАШИ КОМПОНЕНТЫ И СТРАНИЦЫ
-import { LoadingSpinner } from './components/LoadingSpinner.jsx';
-import { SubscriptionModal } from './components/SubscriptionModal.jsx';
-import { PaymentMethodModal } from './components/PaymentMethodModal.jsx';
-import { Header } from './components/Header.jsx';
-import { NovelList } from './components/NovelList.jsx';
-import { BottomNav } from './components/BottomNav.jsx';
-import { NewsSlider, NewsModal } from './components/News.jsx';
+// Компоненты из папки /components
+import { 
+    LoadingSpinner, 
+    SubscriptionModal, 
+    PaymentMethodModal,
+    Header,
+    NovelList,
+    BottomNav,
+    NewsSlider,
+    NewsModal
+} from './components';
 
-import { NovelDetails } from './pages/NovelDetails.jsx';
-import { ChapterReader } from './pages/ChapterReader.jsx';
-import { BookmarksPage } from './pages/BookmarksPage.jsx';
-import { ProfilePage } from './pages/ProfilePage.jsx';
-import { SearchPage } from './pages/SearchPage.jsx';
+// Страницы из папки /pages (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
+import { NovelDetails } from './components/pages/NovelDetails.jsx';
+import { ChapterReader } from './components/pages/ChapterReader.jsx';
+import { BookmarksPage } from './components/pages/BookmarksPage.jsx';
+import { ProfilePage } from './components/pages/ProfilePage.jsx';
+import { SearchPage } from './components/pages/SearchPage.jsx';
 
 // =================================================================
 // ШАГ 2: ОСНОВНОЙ КОМПОНЕНТ APP (ТЕПЕРЬ ОН ГОРАЗДО ЧИЩЕ)

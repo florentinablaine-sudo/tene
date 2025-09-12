@@ -1,5 +1,5 @@
 import React from 'react';
-import { HeartIcon } from './icons.jsx';
+import { HeartIcon } from './';
 
 export const LoadingSpinner = () => (
   <div className="min-h-screen flex flex-col items-center justify-center bg-background text-text-main">

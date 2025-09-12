@@ -1,7 +1,7 @@
 import React from 'react';
 import { signOut } from "firebase/auth";
-import { Header } from '../components/Header';
-import { LogOutIcon } from '../components/Icons';
+import { Header } from "../Header.jsx"; // или "../Header.jsx"
+import { LogOutIcon } from "../icons.jsx"; // Указываем путь к конкретному файлу иконки
 
 export const ProfilePage = ({ user, subscription, onGetSubscriptionClick, userId, auth, onThemeToggle, currentTheme }) => {
     const handleLogout = () => {

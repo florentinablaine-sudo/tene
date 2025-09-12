@@ -1,5 +1,5 @@
 import React from 'react';
-import { CrownIcon } from './icons.jsx';
+import { CrownIcon } from './';
 
 export const SubscriptionModal = ({ onClose, onSelectPlan }) => {
     const subscriptionPlans = [

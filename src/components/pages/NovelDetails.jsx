@@ -1,10 +1,13 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { doc, setDoc } from 'firebase/firestore';
-import { db } from '../firebase-config';
-import { Header } from '../components/Header';
-import { SubscriptionModal } from '../components/SubscriptionModal';
-import { PaymentMethodModal } from '../components/PaymentMethodModal';
-import { LockIcon, ArrowRightIcon } from '../components/icons';
+import { db } from "../../firebase-config";
+// ИСПРАВЛЕННЫЕ ИМПОРТЫ: теперь все идет из '../components'
+import { LockIcon } from '../icons.jsx';
+import { Header } from '../Header.jsx';
+import { SubscriptionModal } from '../SubscriptionModal.jsx';
+import { PaymentMethodModal } from '../PaymentMethodModal.jsx';
+import { ArrowRightIcon } from '../icons.jsx';
+
 
 export const NovelDetails = ({ novel, onSelectChapter, onGenreSelect, subscription, botUsername, userId, chapters, isLoadingChapters, lastReadData, onBack }) => {
     if (!novel) {

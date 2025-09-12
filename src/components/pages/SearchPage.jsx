@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
-import { Header } from '../components/Header.jsx';
-import { NovelList } from '../components/NovelList.jsx';
-import { SearchIcon } from '../components';
+import { Header } from "../Header.jsx";
+import { NovelList } from "../NovelList.jsx";
+import { SearchIcon } from '../icons.jsx';
 
 export const SearchPage = ({ novels, onSelectNovel, bookmarks, onToggleBookmark }) => {
     const [searchQuery, setSearchQuery] = useState('');

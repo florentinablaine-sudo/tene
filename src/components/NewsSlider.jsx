@@ -1,5 +1,5 @@
 import React from 'react';
-import { LibraryIcon, SearchIcon, BookmarkIcon, UserIcon } from './'; // ПРАВИЛЬНО
+import { LibraryIcon, SearchIcon, BookmarkIcon, UserIcon } from './icons.jsx';
 
 export const BottomNav = ({ activeTab, setActiveTab }) => {
     const navItems = [
