@@ -1,23 +1,28 @@
+// src/firebase-config.js --- ВРЕМЕННАЯ ВЕРСИЯ ДЛЯ ТЕСТА
+
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth, browserLocalPersistence, setPersistence } from "firebase/auth";
 
-// Ваша конфигурация Firebase
+// ВРЕМЕННО ЖЕСТКО ЗАКОДИРОВАННАЯ КОНФИГУРАЦИЯ
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_API_KEY,
-  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_APP_ID
+  apiKey: "AIzaSyAhMZTS-LgXURFr19kmDvVG3mc_j68PkNI",
+  authDomain: "tene-9f8c9.firebaseapp.com",
+  projectId: "tene-9f8c9",
+  storageBucket: "tene-9f8c9.appspot.com", // ИЗМЕНЕНО: более стандартный формат
+  messagingSenderId: "1096524923335",
+  appId: "1:1096524923335:web:a2662d6197b49fe3bbd9e2"
 };
 
 // Инициализируем приложение
 const app = initializeApp(firebaseConfig);
 
-// Экспортируем сервисы, которые будем использовать в других частях приложения
+// Экспортируем сервисы
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 
-// Устанавливаем persistence (чтобы пользователь оставался в системе)
-setPersistence(auth, browserLocalPersistence);
+// Устанавливаем persistence
+setPersistence(auth, browserLocalPersistence)
+  .catch((error) => {
+    console.error("Firebase Persistence Error:", error);
+  });

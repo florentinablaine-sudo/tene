@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { doc, getDoc, collection, setDoc, onSnapshot, getDocs } from "firebase/firestore";
 import { db, auth } from './firebase-config.js';
-import { useAuth } from './Auth'; // <-- 1. ИСПОЛЬЗУЕМ ПРАВИЛЬНЫЙ ХУК
+import { useAuth } from './Auth';
 
 // Импорты всех ваших компонентов и экранов
 import { AuthScreen } from './AuthScreen.jsx';
@@ -25,7 +25,7 @@ import { SearchPage } from './components/pages/SearchPage.jsx';
 
 export default function App() {
   // --- Состояние аутентификации из useAuth ---
-  const { user, loading: authLoading } = useAuth(); // <-- 2. Получаем пользователя и статус загрузки из контекста
+  const { user, loading: authLoading } = useAuth();
 
   // --- ВСЕ ВАШИ СОСТОЯНИЯ ОСТАЛИСЬ ЗДЕСЬ ---
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
@@ -66,42 +66,67 @@ export default function App() {
   // ГЛАВНЫЙ useEffect ДЛЯ ЗАГРУЗКИ ДАННЫХ
   useEffect(() => {
     if (authLoading) return; // Ждем окончания проверки авторизации
-    if (!user) { // Если пользователя нет, завершаем загрузку
+    if (!user) { // Если пользователя нет, сбрасываем все и выходим
       setIsLoadingContent(false);
       setNovels([]);
       setSubscription(null);
-      // Сбрасываем другие пользовательские данные при необходимости
+      setBookmarks([]);
+      setLastReadData({});
       return;
     }
 
     // Пользователь есть, начинаем загрузку всего
     setIsLoadingContent(true);
+
+    // --- НАЧАЛО ИСПРАВЛЕННОГО БЛОКА ---
+    // Функция для загрузки новелл и статистики просмотров из Firestore
     const fetchNovelsAndStats = async () => {
         try {
-            const novelsResponse = await fetch(`/data/novels.json`);
-            const novelsData = await novelsResponse.json();
+            // Шаг 1: Загружаем новеллы из коллекции 'novels'
+            const novelsSnapshot = await getDocs(collection(db, "novels"));
+            const novelsData = novelsSnapshot.docs.map(doc => {
+                const data = doc.data();
+                return { ...data, id: doc.id }; // Используем ID документа как главный 'id'
+            });
+
+            // Шаг 2: Загружаем статистику из 'novel_stats'
             const statsSnapshot = await getDocs(collection(db, "novel_stats"));
             const statsMap = new Map();
             statsSnapshot.forEach(doc => statsMap.set(doc.id, doc.data().views));
-            const mergedNovels = novelsData.novels.map(novel => ({
+
+            // Шаг 3: Объединяем новеллы со статистикой
+            const mergedNovels = novelsData.map(novel => ({
                 ...novel,
-                views: statsMap.get(novel.id.toString()) || 0
+                views: statsMap.get(novel.id) || 0
             }));
-            setNovels(mergedNovels);
+
+            setNovels(mergedNovels); // Обновляем состояние
+
         } catch (err) {
-            console.error("Ошибка загрузки новелл или статистики:", err);
+            console.error("Ошибка загрузки новелл или статистики из Firestore:", err);
+            setNovels([]); // В случае ошибки ставим пустой массив
+        }
+    };
+    
+    const checkAdminStatus = async () => {
+        try {
+            const idTokenResult = await user.getIdTokenResult();
+            setIsUserAdmin(!!idTokenResult.claims.admin);
+        } catch (err) {
+            console.error("Ошибка проверки статуса администратора:", err);
+            setIsUserAdmin(false);
         }
     };
 
-    const checkAdminStatus = async () => {
-        const idTokenResult = await user.getIdTokenResult();
-        setIsUserAdmin(!!idTokenResult.claims.admin);
-    };
-
+    // Запускаем все асинхронные загрузки параллельно
+    // Убедимся, что вызываем функцию с правильным именем: fetchNovelsAndStats
     Promise.all([fetchNovelsAndStats(), checkAdminStatus()]).finally(() => {
-        setIsLoadingContent(false);
+        setIsLoadingContent(false); // Завершаем общую загрузку в любом случае
     });
+    // --- КОНЕЦ ИСПРАВЛЕННОГО БЛОКА ---
 
+
+    // Подписка на изменения данных пользователя (осталась без изменений)
     const userDocRef = doc(db, "users", user.uid);
     const unsubscribeUser = onSnapshot(userDocRef, (docSnap) => {
         if (docSnap.exists()) {
@@ -109,16 +134,18 @@ export default function App() {
             setSubscription(data.subscription || null);
             setLastReadData(data.lastRead || {});
             setBookmarks(data.bookmarks || []);
-            // Загрузка настроек пользователя
             if (data.settings) {
               setFontSize(data.settings.fontSize || 16);
               setFontClass(data.settings.fontClass || 'font-sans');
             }
         }
+    }, (error) => {
+        console.error("Ошибка подписки на данные пользователя:", error);
     });
 
+    // Отписываемся от слушателя при выходе или смене пользователя
     return () => unsubscribeUser();
-  }, [user, authLoading]);
+  }, [user, authLoading]); // Зависимость от user и authLoading
 
   // Загрузка глав для выбранной новеллы
   useEffect(() => {
@@ -126,7 +153,7 @@ export default function App() {
       setIsLoadingChapters(true);
       const fetchChapters = async () => {
           try {
-              const docRef = doc(db, 'chapter_info', selectedNovel.id.toString());
+              const docRef = doc(db, 'chapter_info', selectedNovel.id); // .toString() не нужен, так как id уже строка
               const docSnap = await getDoc(docRef);
               if (docSnap.exists() && docSnap.data()) {
                   const data = docSnap.data();
